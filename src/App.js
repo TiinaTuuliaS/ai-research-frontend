@@ -1,63 +1,35 @@
 import React, { useState } from "react";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Dashboard from "./components/Dashboard";
 
 function App() {
-  const [topic, setTopic] = useState("");
-  const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
-  const runResearch = async () => {
-    if (!topic) return;
-
-    setLoading(true);
-    setResult("");
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/research", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          topic: topic,
-          language: "suomi"
-        })
-      });
-
-      const data = await response.json();
-      setResult(data.result);
-
-    } catch (error) {
-      setResult("Virhe backend-yhteydessä");
-    }
-
-    setLoading(false);
-  };
+  if (!user) {
+    return (
+      <div>
+        <h1>🔐 Kirjaudu</h1>
+        <Login setUser={setUser} />
+        <Signup />
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "30px", fontFamily: "Arial" }}>
-      <h1>🔎 AI Research Assistant</h1>
-
-      <input
-        type="text"
-        placeholder="Kirjoita tutkimusaihe..."
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-        style={{ width: "300px", padding: "10px" }}
-      />
-
-      <br /><br />
-
-      <button onClick={runResearch}>
-        🚀 Suorita
+    <div>
+      <button
+        onClick={() => {
+          localStorage.removeItem("user");
+          setUser(null);
+        }}
+      >
+        🚪 Logout
       </button>
 
-      <br /><br />
-
-      {loading && <p>⏳ AI tekee tutkimusta...</p>}
-
-      <div style={{ whiteSpace: "pre-wrap" }}>
-        {result}
-      </div>
+      <Dashboard />
     </div>
   );
 }
