@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function Login({ setUser }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const login = async () => {
@@ -10,7 +10,7 @@ function Login({ setUser }) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ email, password })
     });
 
     const data = await res.json();
@@ -24,23 +24,68 @@ function Login({ setUser }) {
   };
 
   return (
-    <div>
-      <h2>Kirjaudu</h2>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h2>🔐 Kirjaudu sisään</h2>
 
-      <input
-        placeholder="Käyttäjänimi"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+        <input
+          style={styles.input}
+          placeholder="Sähköposti"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Salasana"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          style={styles.input}
+          type="password"
+          placeholder="Salasana"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button onClick={login}>Login</button>
+        <button style={styles.button} onClick={login}>
+          Kirjaudu
+        </button>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#f5f7fb"
+  },
+
+  card: {
+    background: "white",
+    padding: "40px",
+    borderRadius: "16px",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.08)",
+    width: "320px"
+  },
+
+  input: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "12px",
+    borderRadius: "8px",
+    border: "1px solid #ddd"
+  },
+
+  button: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "8px",
+    border: "none",
+    background: "#4f46e5",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer"
+  }
+};
 
 export default Login;
